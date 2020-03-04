@@ -13,13 +13,17 @@ class DiceRoller extends Component {
   };
 
   rollDice = dice => {
-    let result = Math.ceil(Math.random() * dice);
-    dice = "d" + dice;
-    let { modifier, totalRolls } = this.state[dice];
-    result = (result + modifier) * totalRolls;
-    let diceType = this.state[dice];
-    diceType.result = result;
-    this.setState({ diceType });
+    let diceType = "d" + dice;
+    let { modifier, totalRolls } = this.state[diceType];
+    let result = 0;
+    for (let i = 0; i < totalRolls; i++) {
+      let thisRoll = Math.ceil(Math.random() * dice + modifier);
+      console.log("this roll = ", thisRoll, " added to ", result);
+      result += thisRoll;
+    }
+    let diceClone = this.state[diceType];
+    diceClone.result = result;
+    this.setState({ diceClone });
   };
 
   handleIncrement = (dice, box) => {
