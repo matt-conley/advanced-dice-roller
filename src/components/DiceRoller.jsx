@@ -1,19 +1,52 @@
 import React, { Component } from "react";
+import NumBox from "./numBox";
 
-class DiceRoller extends React.Component {
+class DiceRoller extends Component {
   state = {
-    d4: undefined,
-    d6: undefined,
-    d8: undefined,
-    d10: undefined,
-    d12: undefined,
-    d20: undefined,
-    d100: undefined
+    d4: { totalRolls: 1, modifier: 0, result: undefined },
+    d6: { totalRolls: 1, modifier: 0, result: undefined },
+    d8: { totalRolls: 1, modifier: 0, result: undefined },
+    d10: { totalRolls: 1, modifier: 0, result: undefined },
+    d12: { totalRolls: 1, modifier: 0, result: undefined },
+    d20: { totalRolls: 1, modifier: 0, result: undefined },
+    d100: { totalRolls: 1, modifier: 0, result: undefined }
   };
+
   rollDice = dice => {
     let result = Math.ceil(Math.random() * dice);
     dice = "d" + dice;
-    this.setState({ [dice]: result });
+    let { modifier, totalRolls } = this.state[dice];
+    result = (result + modifier) * totalRolls;
+    let diceType = this.state[dice];
+    diceType.result = result;
+    this.setState({ diceType });
+  };
+
+  handleIncrement = (dice, box) => {
+    dice = "d" + dice;
+    console.log(dice, "increment clicked on", box);
+    let diceType = this.state[dice];
+    diceType[box]++;
+    this.setState({ diceType });
+  };
+
+  handleDecrement = (dice, box) => {
+    dice = "d" + dice;
+    console.log(dice, "increment clicked on", box);
+    let diceType = this.state[dice];
+
+    //Dont allow totalRolls to decrement below 1
+    if (box !== "totalRolls") {
+      diceType[box]--;
+    } else if (diceType.totalRolls > 1) {
+      diceType[box]--;
+    }
+
+    this.setState({ diceType });
+  };
+
+  handleChange = () => {
+    console.log("value changed");
   };
 
   render() {
@@ -34,9 +67,23 @@ class DiceRoller extends React.Component {
               <tr key={dice}>
                 <th scope="row">D{dice}</th>
                 {/* TOTAL ROLLS SELECTOR */}
-                <td>stuff here</td>
+                <td>
+                  <NumBox
+                    value={this.state["d" + dice].totalRolls}
+                    onIncrement={() => this.handleIncrement(dice, "totalRolls")}
+                    onDecrement={() => this.handleDecrement(dice, "totalRolls")}
+                    onChange={this.handleChange}
+                  />
+                </td>
                 {/* MODIFIERS SELECTOR */}
-                <td>modifiers</td>
+                <td>
+                  <NumBox
+                    value={this.state["d" + dice].modifier}
+                    onIncrement={() => this.handleIncrement(dice, "modifier")}
+                    onDecrement={() => this.handleDecrement(dice, "modifier")}
+                    onChange={this.handleChange}
+                  />
+                </td>
                 {/* RESULTS */}
                 <td>
                   <div className="input-group mb-3">
@@ -52,7 +99,7 @@ class DiceRoller extends React.Component {
                     <input
                       type="text"
                       className="form-control roll-result"
-                      value={this.state["d" + dice]}
+                      value={this.state["d" + dice].result}
                       readOnly
                     />
                   </div>

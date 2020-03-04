@@ -3,7 +3,19 @@
   text-align: center;
 }
 
+input[type="text"] {
+  text-align: center;
+}
+
 .input-group > .form-control {
   flex: none;
   width: 50px;
+}
+
+.container {
+  width: 560px !important;
+}
+
+th {
+  text-align: center;
 }
