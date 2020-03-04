@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import DiceRoller from "../components/DiceRoller";
+import DiceRoller from "./components/DiceRoller";
 import "./styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 
